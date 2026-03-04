@@ -1,0 +1,94 @@
+# ===============================
+# Credit Risk Analysis Config
+# ===============================
+
+project:
+  name: credit-risk-analysis
+  random_state: 42
+  test_size: 0.2
+
+# ===============================
+# Data Configuration
+# ===============================
+data:
+  raw_data_path: data/raw/bank_loan_data.csv
+  processed_data_path: data/processed/cleaned_data.csv
+  target_column: loan_status
+  positive_class: default
+
+# ===============================
+# Preprocessing
+# ===============================
+preprocessing:
+  scaling:
+    method: standard_scaler   # options: standard_scaler, minmax, none
+  categorical_encoding:
+    method: onehot            # options: onehot, label, woe
+  missing_values:
+    numeric_strategy: median  # options: mean, median
+    categorical_strategy: most_frequent
+  outlier_handling:
+    enabled: false
+    method: iqr               # options: iqr, zscore
+    threshold: 1.5
+
+# ===============================
+# Feature Engineering
+# ===============================
+feature_engineering:
+  enable_interactions: false
+  drop_columns: []
+  derived_features: []
+
+# ===============================
+# Model Configuration
+# ===============================
+model:
+  type: logistic_regression   # options: logistic_regression, random_forest, xgboost
+  logistic_regression:
+    penalty: l2
+    C: 1.0
+    solver: lbfgs
+    max_iter: 1000
+  random_forest:
+    n_estimators: 200
+    max_depth: 10
+  xgboost:
+    n_estimators: 300
+    learning_rate: 0.05
+    max_depth: 6
+
+# ===============================
+# Evaluation
+# ===============================
+evaluation:
+  metrics:
+    - roc_auc
+    - precision
+    - recall
+    - f1
+    - confusion_matrix
+  cross_validation:
+    enabled: true
+    folds: 5
+
+# ===============================
+# Decision Policy
+# ===============================
+decision:
+  threshold: 0.5
+  optimize_threshold: true
+  optimization_metric: expected_loss
+
+  expected_loss:
+    LGD: 0.45
+    EAD_multiplier: 1.0
+
+# ===============================
+# Output Paths
+# ===============================
+output:
+  model_path: models/
+  reports_path: reports/
+  figures_path: reports/figures/
+  logs_path: logs/
