@@ -1,13 +1,8 @@
 #Bank Credit Risk Analysis Project: Classification algorithm (ML) 
 numpy
 pandas
-matplotlib
 scikit-learn
 streamlit
 plotly
 openpyxl
 xgboost
-lightgbm
-catboost
-imbalanced-learn
-pickle

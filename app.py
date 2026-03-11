@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 # Memanggil modul-modul dari folder src/
 from .src.preprocessor import Preprocessor as dp
 from .src.modeling import CreditRiskModel as crm
-from .src import rules 
+from .src.rules import hitung_kolektibilitas_ojk
 
 st.set_page_config(page_title="Credit Risk Analysis System", page_icon="🏦", layout="wide")
 
