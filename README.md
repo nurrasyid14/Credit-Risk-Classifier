@@ -1,136 +1,100 @@
 # Credit Risk Classifier
 
-Sistem Penilaian Risiko Kredit berbasis Machine Learning menggunakan XGBoost dengan PyCaret.
+Proyek klasifikasi risiko kredit menggunakan machine learning untuk memprediksi apakah aplikasi kredit akan disetujui atau ditolak berdasarkan data historis.
 
-## 📊 Model Performance
+## Dataset
 
-**Model Terbaik: XGBoost (Extreme Gradient Boosting)**
-- **AUC: 0.9785** (sangat baik untuk imbalanced data)
-- **Accuracy: 93.36%**
-- **Recall: 80.30%** (mendeteksi 80% nasabah berisiko)
-- **Precision: 88.75%** (88% prediksi risiko adalah benar)
-- **F1-Score: 0.8431**
+Dataset yang digunakan: **Statlog (German Credit Data)** dari UCI Machine Learning Repository
+- 1000 sampel
+- 20 fitur (mix categorical dan numerical)
+- Target: Good (700 sampel) / Bad (300 sampel)
 
-## 🚀 Quick Start
+## Model Performance
 
-### 1. Install Dependencies
+**Model Terbaik: LightGBM Classifier**
+- Metrik evaluasi: Accuracy, Precision, Recall, F1-Score, AUC
+- Menggunakan PyCaret untuk AutoML dan hyperparameter tuning
 
-```bash
-# Via conda (Recommended untuk Windows)
-conda install -c conda-forge pycaret -y
+## Setup untuk Teman
 
-# Atau via pip
-pip install pycaret streamlit plotly pandas
-```
-
-### 2. Run Application
+### 1. Clone Repository
 
 ```bash
-streamlit run app.py
+git clone https://github.com/YOUR_USERNAME/Credit-Risk-Classifier.git
+cd Credit-Risk-Classifier
 ```
 
-## 📁 Project Structure
+### 2. Buat Virtual Environment (Opsional tapi Disarankan)
+
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# Mac/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Jalankan Notebook
+
+```bash
+jupyter notebook
+```
+
+Buka file `main.ipynb` dan jalankan cell-by-cell.
+
+## Struktur Project
 
 ```
 Credit-Risk-Classifier/
-│
-├── data/
-│   └── loan_data.csv              # Dataset (44,990 baris)
-│
-├── src/
-│   ├── preprocessing.py           # Data cleaning & feature engineering
-│   ├── modeling.py                # Random Forest (fallback model)
-│   ├── rules.py                   # Business rules
-│   ├── eda.ipynb                  # Exploratory Data Analysis
-│   └── plots/                     # Visualisasi EDA
-│
-├── models/
-│   └── best_pycaret_model.pkl     # XGBoost model (PyCaret)
-│
-├── plots_pycaret/                 # Evaluasi model
-│   ├── pycaret_confusion_matrix.png
-│   ├── pycaret_feature_importance.png
-│   └── pycaret_roc_auc.png
-│
-├── app.py                         # Streamlit web application
-└── isengisengPyCaret.ipynb        # Notebook eksperimen AutoML
+├── main.ipynb              # Notebook utama (EDA, preprocessing, modeling)
+├── requirements.txt        # Daftar library yang dibutuhkan
+├── README.md              # Dokumentasi (file ini)
+└── saved_models/          # Folder untuk menyimpan model (akan dibuat otomatis)
 ```
 
-## 🔧 How It Works
+## Cara Pakai
 
-### Model Selection (app.py)
+1. Buka `main.ipynb`
+2. Jalankan semua cell secara berurutan
+3. Model akan otomatis:
+   - Download dataset dari UCI
+   - Melakukan preprocessing
+   - Training dengan PyCaret
+   - Evaluasi dan tuning model
+   - Menyimpan model terbaik
 
-Aplikasi secara otomatis memilih model terbaik yang tersedia:
+## Requirements
 
-1. **Primary**: XGBoost dari PyCaret (`models/best_pycaret_model.pkl`)
-   - Jika tersedia, akan digunakan (performa tertinggi)
-   - Preprocessing sudah built-in dalam pipeline PyCaret
-   
-2. **Fallback**: Random Forest manual
-   - Dilatih on-the-fly jika PyCaret tidak tersedia
-   - Menggunakan `src/preprocessing.py` dan `src/modeling.py`
+- Python 3.8+
+- RAM minimal 4GB (untuk PyCaret)
+- Koneksi internet (saat pertama kali download dataset)
 
-### Decision Logic
+## Troubleshooting
 
-- **APPROVED**: PD < 15% (Risiko rendah)
-- **CONDITIONAL APPROVAL**: 15% ≤ PD < 30% (Risiko sedang)
-- **REJECTED**: PD ≥ 30% (Risiko tinggi)
-
-## 📈 Model Comparison
-
-| Model | AUC | Accuracy | Recall | Precision |
-|-------|-----|----------|--------|-----------|
-| **XGBoost (PyCaret)** | **0.9785** | **93.36%** | **80.30%** | **88.75%** |
-| CatBoost | 0.9780 | 93.32% | 79.12% | 89.63% |
-| LightGBM | 0.9777 | 93.22% | 78.79% | 89.45% |
-| Random Forest (Manual) | ~0.92 | ~91% | ~75% | ~85% |
-
-## 🧪 Re-train Model
-
-Untuk melatih ulang model dengan dataset baru:
-
+### Error: `ModuleNotFoundError`
 ```bash
-# Jalankan notebook PyCaret
-jupyter notebook isengisengPyCaret.ipynb
+pip install -r requirements.txt
 ```
 
-Model baru akan tersimpan di `models/best_pycaret_model.pkl`
-
-## 📊 Features Used
-
-Dataset menggunakan 13 fitur prediksi:
-- `person_age`: Umur peminjam
-- `person_income`: Pendapatan tahunan
-- `person_emp_length`: Lama bekerja
-- `person_home_ownership`: Status kepemilikan rumah
-- `loan_amnt`: Jumlah pinjaman
-- `loan_intent`: Tujuan pinjaman
-- `loan_int_rate`: Suku bunga
-- `loan_percent_income`: Rasio pinjaman terhadap pendapatan (DTI)
-- `cb_person_cred_hist_length`: Durasi histori kredit
-- `credit_score`: Skor kredit
-- `cb_person_default_on_file`: Riwayat gagal bayar
-
-## ⚠️ Troubleshooting
-
-### PyCaret tidak terinstall
-
-Jika aplikasi menampilkan "Menggunakan Random Forest manual", artinya PyCaret belum terinstall:
-
+### Error: PyCaret installation
+Jika ada masalah dengan PyCaret, install secara manual:
 ```bash
-conda install -c conda-forge pycaret -y
+pip install pycaret[full]
 ```
 
-### Error saat load model
+### Jupyter Kernel tidak ditemukan
+```bash
+python -m ipykernel install --user --name=venv
+```
 
-Pastikan file `models/best_pycaret_model.pkl` ada dan PyCaret terinstall dengan versi yang sama.
+## Author
 
-## 👨‍💻 Development
-
-Dibuat untuk tugas Bu Alfi - Semester 4
-
----
-
-**Model Powered by**: PyCaret AutoML + XGBoost  
-**Web Framework**: Streamlit  
-**Visualization**: Plotly
+Tugas kuliah - Credit Risk Analysis
